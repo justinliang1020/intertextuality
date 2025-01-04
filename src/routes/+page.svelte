@@ -54,9 +54,8 @@
 
 <div class="sticky-board">
 	{#each textBlocks as textBlock (textBlock.id)}
-		<button
+		<div
 			class="sticky-note"
-			onclick={() => onClickTextBlock(textBlock)}
 			style="--rotation: {Math.random() * 6 - 3}deg; --color: {[
 				'#ffd700',
 				'#ff7eb9',
@@ -64,9 +63,13 @@
 				'#87ceeb'
 			][Math.floor(Math.random() * 4)]}"
 		>
-			<p class="quote-text">"{textBlock.content}"</p>
+			<div style="height: 200px;">
+				<p class="quote-text">"{textBlock.content}"</p>
+			</div>
 			<p class="quote-title">- {textBlock.title}</p>
-		</button>
+			<a href="https://www.are.na/block/{textBlock.id}" target="_blank">source</a>
+			<button onclick={() => onClickTextBlock(textBlock)}>jump</button>
+		</div>
 	{/each}
 </div>
 
@@ -103,6 +106,12 @@
 		font-size: 1.1rem;
 		margin-bottom: 1rem;
 		font-family: 'Courier New', Courier, monospace;
+		display: -webkit-box;
+		line-clamp: 8;
+		-webkit-line-clamp: 8; /* number of lines to show */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.quote-title {
