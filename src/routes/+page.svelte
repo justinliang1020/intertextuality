@@ -11,35 +11,52 @@
 
 	console.log(textBlocksJson);
 	let textBlocks: TextBlock[] = $state(textBlocksJson as TextBlock[]);
+	let lastClickedTextBlock: TextBlock | null = null;
 
-	let lastClickedIndex: number | null = null;
+	function cosineSimilarity(a: number[], b: number[]): number {
+		if (a.length !== b.length) {
+			throw new Error('Vectors must have same length');
+		}
 
-	function shuffleQuotes(excludeId: number) {
-		const clickedIndex = textBlocks.findIndex((q) => q.id === excludeId);
-		if (lastClickedIndex == clickedIndex) {
+		let dotProduct = 0;
+		let normA = 0;
+		let normB = 0;
+
+		for (let i = 0; i < a.length; i++) {
+			dotProduct += a[i] * b[i];
+			normA += a[i] * a[i];
+			normB += b[i] * b[i];
+		}
+
+		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+	}
+
+	function findSimilarTextBlocks(textBlock: TextBlock, n: number = 30) {
+		// returns similar text blocks to the input textBlock. includes input textBlock as the first element of that array
+		const similarities = textBlocks
+			.map((other) => ({
+				textBlock: other,
+				similarity: cosineSimilarity(textBlock.embedding, other.embedding)
+			}))
+			.sort((a, b) => b.similarity - a.similarity)
+			.slice(0, n + 1);
+		return similarities.map((s) => s.textBlock);
+	}
+
+	function onClickTextBlock(textBlock: TextBlock) {
+		if (lastClickedTextBlock === textBlock) {
 			return;
 		}
-		lastClickedIndex = clickedIndex;
-		const otherQuotes = textBlocks.filter((q) => q.id !== excludeId);
-		const clickedQuote = textBlocks[clickedIndex];
-
-		// Fisher-Yates shuffle algorithm
-		for (let i = otherQuotes.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[otherQuotes[i], otherQuotes[j]] = [otherQuotes[j], otherQuotes[i]];
-		}
-
-		// Insert the clicked quote back at its original position
-		otherQuotes.splice(clickedIndex, 0, clickedQuote);
-		textBlocks = otherQuotes;
+		lastClickedTextBlock = textBlock;
+		textBlocks = findSimilarTextBlocks(textBlock);
 	}
 </script>
 
 <div class="sticky-board">
-	{#each textBlocks as quote (quote.id)}
+	{#each textBlocks as textBlock (textBlock.id)}
 		<button
 			class="sticky-note"
-			onclick={() => shuffleQuotes(quote.id)}
+			onclick={() => onClickTextBlock(textBlock)}
 			style="--rotation: {Math.random() * 6 - 3}deg; --color: {[
 				'#ffd700',
 				'#ff7eb9',
@@ -47,8 +64,8 @@
 				'#87ceeb'
 			][Math.floor(Math.random() * 4)]}"
 		>
-			<p class="quote-text">"{quote.content}"</p>
-			<p class="quote-title">- {quote.title}</p>
+			<p class="quote-text">"{textBlock.content}"</p>
+			<p class="quote-title">- {textBlock.title}</p>
 		</button>
 	{/each}
 </div>
