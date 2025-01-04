@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-interface TextBlock {
+export interface TextBlock {
   id: string; // scraped from block
   title: string; // scraped from block
   content: string; // scraped from block
