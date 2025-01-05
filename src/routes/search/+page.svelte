@@ -165,7 +165,6 @@
 		grid-template-columns: 1fr;
 		gap: 2rem;
 		padding: 2rem;
-		min-height: 100vh;
 		justify-items: center;
 	}
 
