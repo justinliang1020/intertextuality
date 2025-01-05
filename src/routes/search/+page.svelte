@@ -15,7 +15,7 @@
 		const embeddings = (
 			await extractor(searchInput, { pooling: 'mean', normalize: true })
 		).tolist()[0];
-		textBlocks = findSimilarTextBlocks(embeddings, 10);
+		textBlocksWithSimilarity = findSimilarTextBlocks(embeddings, 50);
 	}
 	function cosineSimilarity(a: number[], b: number[]): number {
 		if (a.length !== b.length) {
@@ -35,16 +35,24 @@
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 
-	function findSimilarTextBlocks(embedding: number[], n: number = 30): TextBlock[] {
+	function findSimilarTextBlocks(
+		embedding: number[],
+		n: number = 30
+	): (TextBlock & { similarity: number })[] {
 		// returns similar text blocks to the input textBlock. includes input textBlock as the first element of that array
 		const similarities = allTextBlocks
 			.map((other) => ({
-				textBlock: other,
+				...other,
 				similarity: cosineSimilarity(embedding, other.embedding)
 			}))
 			.sort((a, b) => b.similarity - a.similarity)
 			.slice(0, n + 1);
-		return similarities.map((s) => s.textBlock);
+		return similarities;
+	}
+
+	function getSimilarityColor(similarity: number): string {
+		const g = 125 + Math.round(similarity * 100);
+		return `rgb(255, ${g}, 71)`;
 	}
 
 	interface TextBlock {
@@ -59,7 +67,7 @@
 		extractor = await pipeline('feature-extraction', 'mixedbread-ai/mxbai-embed-xsmall-v1');
 	});
 
-	let textBlocks: TextBlock[] = $state([]);
+	let textBlocksWithSimilarity: (TextBlock & { similarity: number })[] = $state([]);
 </script>
 
 <form onsubmit={handleSubmitSearch} class="search-form">
@@ -77,26 +85,24 @@
 </form>
 
 <div class="sticky-board">
-	{#if textBlocks.length === 0}
+	{#if textBlocksWithSimilarity.length === 0}
 		<p>search a term to find relevant are.na text blocks</p>
 	{/if}
 	{#if extractor === null}
 		<p>initializing embedding model...</p>
 	{/if}
-	{#each textBlocks as textBlock}
+	{#each textBlocksWithSimilarity as textBlock}
 		<div
 			class="sticky-note"
-			style="--rotation: {Math.random() * 6 - 3}deg; --color: {[
-				'#ffd700',
-				'#ff7eb9',
-				'#90ee90',
-				'#87ceeb'
-			][Math.floor(Math.random() * 4)]}"
+			style="--rotation: {Math.random() * 6 - 3}deg; --color: {getSimilarityColor(
+				textBlock.similarity
+			)}"
 		>
 			<div style="height: 200px;">
 				<p class="quote-text">"{textBlock.content}"</p>
 			</div>
 			<p class="quote-title">- {textBlock.title}</p>
+			<p>similarity: {textBlock.similarity}</p>
 			<a href="https://www.are.na/block/{textBlock.id}" target="_blank">source</a>
 		</div>
 	{/each}
