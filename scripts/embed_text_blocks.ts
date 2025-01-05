@@ -41,6 +41,7 @@ const extractor = await pipeline(
 );
 const texts = textBlocks.map((textBlock) => textBlock.content);
 console.log('Embedding...')
+const time = Date.now();
 const embeddings = await extractor(texts, { pooling: "mean", normalize: true });
 // Add embeddings to each text block
 const textBlocksWithEmbeddings: TextBlockWithEmbedding[] = textBlocks.map((textBlock, index) => ({
@@ -59,4 +60,5 @@ fs.writeFile(
     console.log("File created!");
   });
 
+console.log(`Finished in ${(Date.now() - time) / 1000}`)
 console.log(`Saved ${textBlocksWithEmbeddings.length} text blocks to ${fileName}`);

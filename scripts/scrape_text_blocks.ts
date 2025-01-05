@@ -9,7 +9,9 @@ export interface TextBlock {
 // Change this to whatever list of channels you want to scrape test blocks from
 const channelUrls = [
   "https://www.are.na/justin-liang/quotes-nlcurs8qjuk",
-  // "https://www.are.na/sav/unearthing-qc-5dw1r9k"
+  "https://www.are.na/sav/unearthing-qc-5dw1r9k",
+  "https://www.are.na/michelle-sueann/brain-imprints",
+  "https://www.are.na/lydia-beyer-0bf1yyz78li/text-t_yc04u6kt4"
 ]
 
 function parseArenaChannelSlug(url: string): string {
@@ -64,6 +66,7 @@ async function scrape_text_blocks(channelUrl: string): Promise<TextBlock[]> {
 }
 
 
+//TODO: get rid of duplicates?
 const textBlocks: TextBlock[] = await Promise.all(channelUrls.map((channelUrl) => scrape_text_blocks(channelUrl))).then(blocks => blocks.flat());
 // Save text blocks to JSON file
 fs.writeFile(
