@@ -9,7 +9,6 @@
 		embedding: number[];
 	}
 
-	console.log(textBlocksJson);
 	let textBlocks: TextBlock[] = $state(textBlocksJson as TextBlock[]);
 	let lastClickedTextBlock: TextBlock | null = null;
 
@@ -53,7 +52,7 @@
 </script>
 
 <div class="sticky-board">
-	{#each textBlocks as textBlock (textBlock.id)}
+	{#each textBlocks as textBlock}
 		<div
 			class="sticky-note"
 			style="--rotation: {Math.random() * 6 - 3}deg; --color: {[
