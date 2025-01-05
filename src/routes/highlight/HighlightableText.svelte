@@ -14,7 +14,9 @@
 	let iWordFocused: number | null = $state(null);
 	$effect(() => {
 		if (iWord1 !== null && iWord2 !== null) {
-			highlightedText = words.slice(iWord1, iWord2 + 1).join(' ');
+			highlightedText = words
+				.slice(Math.min(iWord1, iWord2), Math.max(iWord1, iWord2) + 1)
+				.join(' ');
 		}
 	});
 
@@ -59,7 +61,7 @@
 			<!-- content here -->
 			<button
 				class="word-button"
-				style="background-color: aquamarine;"
+				style="background-color: greenyellow;"
 				onclick={() => onWordClick(i)}
 				onmouseover={() => onWordFocus(i)}
 				onfocus={() => onWordFocus(i)}>{word}&nbsp</button
@@ -88,7 +90,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		max-width: 800px;
+		max-width: 1000px;
 		margin: 0 auto;
 		padding: 2rem;
 		font-size: 5em;
