@@ -110,15 +110,12 @@
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		color: rgb(0, 0, 0);
 	}
 
 	.quote-title {
 		font-style: italic;
 		text-align: right;
 		color: #666;
-	}
-
-	:global(body) {
-		background-color: rgb(32, 33, 34);
 	}
 </style>
