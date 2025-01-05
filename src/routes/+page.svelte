@@ -20,7 +20,7 @@
 		<a href="https://river.maxbittker.com/">https://river.maxbittker.com/</a>
 	</li>
 	<li>
-		<a href="{base}/search">/search</a> - (todo) semantic search using colors to indicate similarity
+		<a href="{base}/search">/search</a> - semantic search using colors to indicate similarity
 	</li>
 	<!-- <li> -->
 	<!-- 	<a href="/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes -->
