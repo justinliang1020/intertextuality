@@ -30,7 +30,7 @@
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 
-	function findSimilarTextBlocks(textBlock: TextBlock, n: number = 30) {
+	function findSimilarTextBlocks(textBlock: TextBlock, n: number = 30): TextBlock[] {
 		// returns similar text blocks to the input textBlock. includes input textBlock as the first element of that array
 		const similarities = textBlocks
 			.map((other) => ({
