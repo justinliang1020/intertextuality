@@ -1,3 +1,7 @@
+<script>
+	import { base } from '$app/paths';
+</script>
+
 <h1>intertextuality</h1>
 
 <p>various experiments on showing computational relations between texts</p>
@@ -11,13 +15,14 @@
 
 <ul>
 	<li>
-		<a href="/river">/river</a> - gallery of relevant quotes that you can jump through. inspired by
+		<a href="{base}/river">/river</a> - gallery of relevant quotes that you can jump through.
+		inspired by
 		<a href="https://river.maxbittker.com/">https://river.maxbittker.com/</a>
 	</li>
 	<li>
-		<a href="/search">/search</a> - (todo) semantic search using colors to indicate similarity
+		<a href="{base}/search">/search</a> - (todo) semantic search using colors to indicate similarity
 	</li>
-	<li>
-		<a href="/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes
-	</li>
+	<!-- <li> -->
+	<!-- 	<a href="/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes -->
+	<!-- </li> -->
 </ul>
