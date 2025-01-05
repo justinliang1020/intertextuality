@@ -22,7 +22,7 @@
 	<li>
 		<a href="{base}/search">/search</a> - semantic search using colors to indicate similarity
 	</li>
-	<!-- <li> -->
-	<!-- 	<a href="/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes -->
-	<!-- </li> -->
+	<li>
+		<a href="{base}/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes
+	</li>
 </ul>
