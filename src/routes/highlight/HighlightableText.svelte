@@ -69,8 +69,7 @@
 		{:else if iWord1 == i}
 			<!-- content here -->
 			<button
-				class="word-button"
-				style="background-color: greenyellow;"
+				class="word-button word-1"
 				onclick={() => onWordClick(i)}
 				onmouseover={() => onWordFocus(i)}
 				onfocus={() => onWordFocus(i)}>{word}&nbsp</button
@@ -122,6 +121,10 @@
 		margin: 0;
 		border: none;
 		background: none;
+	}
+
+	.word-1 {
+		background-color: greenyellow;
 	}
 
 	.word-in-between {
