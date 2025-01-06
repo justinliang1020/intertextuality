@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { tapOutside } from '$lib/clickOutside';
-	let { text, highlightedText = $bindable() }: { text: string; highlightedText: string } = $props();
+	import { stopWords } from '$lib/utils';
+	let {
+		text,
+		relatedQuote,
+		highlightedText = $bindable()
+	}: { text: string; relatedQuote: string; highlightedText: string } = $props();
 
 	// click a word. that word gets selected as word1
 	// highlight over other words, those words get possibly selected
@@ -12,6 +17,9 @@
 	let iWord1: number | null = $state(null);
 	let iWord2: number | null = $state(null);
 	let iWordFocused: number | null = $state(null);
+	let relatedWords: string[] = (relatedQuote.match(/\b(\w+)\b/g) || []).filter(
+		(word: string) => !stopWords.includes(word.toLowerCase())
+	);
 	$effect(() => {
 		if (iWord1 !== null && iWord2 !== null) {
 			highlightedText = words
@@ -50,6 +58,7 @@
 </script>
 
 <div class="text-container" use:tapOutside={() => onOutsideTap()}>
+	<!-- CSS background-color precedence means that :hover/:focus background-color takes precedence over CSS class background-color-->
 	{#each words as word, i}
 		{#if iWord1 !== null && iWord2 !== null}
 			{#if isInBetweenInclusive(iWord1, i, iWord2)}
@@ -69,6 +78,13 @@
 		{:else if iWord1 !== null && iWordFocused != null && isInBetween(iWord1, i, iWordFocused)}
 			<button
 				class="word-button word-in-between"
+				onclick={() => onWordClick(i)}
+				onmouseover={() => onWordFocus(i)}
+				onfocus={() => onWordFocus(i)}>{word}&nbsp</button
+			>
+		{:else if relatedWords.includes(word.toLowerCase())}
+			<button
+				class="word-button word-related"
 				onclick={() => onWordClick(i)}
 				onmouseover={() => onWordFocus(i)}
 				onfocus={() => onWordFocus(i)}>{word}&nbsp</button
@@ -110,6 +126,10 @@
 
 	.word-in-between {
 		background-color: blue;
+	}
+
+	.word-related {
+		background-color: purple;
 	}
 
 	.word-button:hover {

@@ -69,8 +69,16 @@
 	}
 </script>
 
-{#each hTexts as h}
-	<HighlightableText text={h.text} bind:highlightedText={h.highlightedText} />
+{#each hTexts as h, i}
+	{#if i === 0}
+		<HighlightableText text={h.text} relatedQuote="" bind:highlightedText={h.highlightedText} />
+	{:else}
+		<HighlightableText
+			text={h.text}
+			relatedQuote={hTexts[i - 1].highlightedText}
+			bind:highlightedText={h.highlightedText}
+		/>
+	{/if}
 	<div class="metadata">
 		<p><i>{h.title}</i></p>
 		<a href={h.source}>source</a>
