@@ -4,7 +4,7 @@
 
 <h1>intertextuality</h1>
 
-<p>various experiments on showing computational relations between texts</p>
+<p>A collection of experiments on showing computational relations between texts.</p>
 
 <p>
 	<i>
@@ -26,3 +26,10 @@
 		<a href="{base}/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes
 	</li>
 </ul>
+
+<p>
+	<a href="https://github.com/justinliang1020/intertextuality">source code</a>
+</p>
+<p>
+	by: <a href="https://www.justinliang.me/">justin</a>
+</p>
