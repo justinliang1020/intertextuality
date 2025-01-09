@@ -3,9 +3,10 @@
 	import { pipeline } from '@huggingface/transformers';
 	import type { FeatureExtractionPipeline } from '@huggingface/transformers';
 	import { onMount } from 'svelte';
+	import type { TextBlockWithEmbedding } from '$lib/types';
 
 	let extractor: FeatureExtractionPipeline | null = $state(null);
-	let allTextBlocks: TextBlock[] = textBlocksJson;
+	let allTextBlocks: TextBlockWithEmbedding[] = textBlocksJson;
 	let searchInput = $state('');
 	async function handleSubmitSearch() {
 		if (!extractor) {
@@ -38,7 +39,7 @@
 	function findSimilarTextBlocks(
 		embedding: number[],
 		n: number = 30
-	): (TextBlock & { similarity: number })[] {
+	): (TextBlockWithEmbedding & { similarity: number })[] {
 		// returns similar text blocks to the input textBlock. includes input textBlock as the first element of that array
 		const similarities = allTextBlocks
 			.map((other) => ({
@@ -55,19 +56,11 @@
 		return `rgb(255, ${g}, 71)`;
 	}
 
-	interface TextBlock {
-		id: number;
-		title: string;
-		content: string;
-		channelSlug: string;
-		embedding: number[];
-	}
-
 	onMount(async () => {
 		extractor = await pipeline('feature-extraction', 'mixedbread-ai/mxbai-embed-xsmall-v1');
 	});
 
-	let textBlocksWithSimilarity: (TextBlock & { similarity: number })[] = $state([]);
+	let textBlocksWithSimilarity: (TextBlockWithEmbedding & { similarity: number })[] = $state([]);
 </script>
 
 <form onsubmit={handleSubmitSearch} class="search-form">

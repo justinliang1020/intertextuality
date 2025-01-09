@@ -1,16 +1,10 @@
 <script lang="ts">
 	//TODO: put this in a shared types file that the scripts also access
 	import textBlocksJson from '../text_blocks_with_embeddings.json';
-	interface TextBlock {
-		id: number;
-		title: string;
-		content: string;
-		channelSlug: string;
-		embedding: number[];
-	}
+	import type { TextBlockWithEmbedding } from '$lib/types';
 
-	let textBlocks: TextBlock[] = $state(textBlocksJson as TextBlock[]);
-	let lastClickedTextBlock: TextBlock | null = null;
+	let textBlocks: TextBlockWithEmbedding[] = $state(textBlocksJson as TextBlockWithEmbedding[]);
+	let lastClickedTextBlock: TextBlockWithEmbedding | null = null;
 
 	function cosineSimilarity(a: number[], b: number[]): number {
 		if (a.length !== b.length) {
@@ -30,7 +24,10 @@
 		return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 
-	function findSimilarTextBlocks(textBlock: TextBlock, n: number = 30): TextBlock[] {
+	function findSimilarTextBlocks(
+		textBlock: TextBlockWithEmbedding,
+		n: number = 30
+	): TextBlockWithEmbedding[] {
 		// returns similar text blocks to the input textBlock. includes input textBlock as the first element of that array
 		const similarities = textBlocks
 			.map((other) => ({
@@ -42,7 +39,7 @@
 		return similarities.map((s) => s.textBlock);
 	}
 
-	function onClickTextBlock(textBlock: TextBlock) {
+	function onClickTextBlock(textBlock: TextBlockWithEmbedding) {
 		if (lastClickedTextBlock === textBlock) {
 			return;
 		}

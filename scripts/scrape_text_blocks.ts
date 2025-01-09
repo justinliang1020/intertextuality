@@ -1,10 +1,5 @@
 import * as fs from 'fs';
-export interface TextBlock {
-  id: number; // scraped from block
-  title: string; // scraped from block
-  content: string; // scraped from block
-  channelSlug: string; // scarped from channel name
-}
+import type { TextBlock } from '../src/lib/types.ts'
 
 // Change this to whatever list of channels you want to scrape test blocks from
 const channelUrls = [

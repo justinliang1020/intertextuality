@@ -27,11 +27,8 @@
 
 import * as fs from 'fs';
 import { pipeline } from '@huggingface/transformers';
-import type { TextBlock } from './scrape_text_blocks';
+import type { TextBlock, TextBlockWithEmbedding } from '../src/lib/types.ts';
 
-interface TextBlockWithEmbedding extends TextBlock {
-  embedding: number[]
-}
 const textBlocksJson = fs.readFileSync('text_blocks.json', 'utf8');
 const textBlocks: TextBlock[] = JSON.parse(textBlocksJson);
 console.log(`Loaded text_blocks.json, found ${textBlocks.length} text blocks to embed`);
