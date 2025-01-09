@@ -26,7 +26,7 @@
 		<a href="{base}/search">/search</a> - semantic search using colors to indicate similarity
 	</li>
 	<li>
-		<a href="{base}/highlight">/highlight</a> - (todo) highlight words in a text and get similar quotes
+		<a href="{base}/highlight">/highlight</a> - highlight words in a text and get similar quotes
 	</li>
 </ul>
 
