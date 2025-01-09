@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 export interface TextBlock {
-  id: string; // scraped from block
+  id: number; // scraped from block
   title: string; // scraped from block
   content: string; // scraped from block
   channelSlug: string; // scarped from channel name
@@ -11,7 +11,8 @@ const channelUrls = [
   "https://www.are.na/justin-liang/quotes-nlcurs8qjuk",
   "https://www.are.na/sav/unearthing-qc-5dw1r9k",
   "https://www.are.na/michelle-sueann/brain-imprints",
-  "https://www.are.na/lydia-beyer-0bf1yyz78li/text-t_yc04u6kt4"
+  "https://www.are.na/lydia-beyer-0bf1yyz78li/text-t_yc04u6kt4",
+  "https://www.are.na/erin-bugee/quotation-mark-underscore-quotation-mark",
 ]
 
 function parseArenaChannelSlug(url: string): string {
@@ -27,7 +28,7 @@ function parseArenaChannelSlug(url: string): string {
   throw new Error("Invalid Are.na URL. Couldn't parse channel.");
 }
 
-async function scrape_text_blocks(channelUrl: string): Promise<TextBlock[]> {
+async function scrape_text_blocks(channelUrl: string, ids: Set<number>): Promise<TextBlock[]> {
   const channelSlug = parseArenaChannelSlug(channelUrl)
   const baseUrl = `https://api.are.na/v2/channels/${channelSlug}`;
   const textBlocks: TextBlock[] = [];
@@ -47,9 +48,10 @@ async function scrape_text_blocks(channelUrl: string): Promise<TextBlock[]> {
     // Process blocks from contents
     if (data.contents && data.contents.length > 0) {
       for (const block of data.contents) {
-        if (block.class === "Text" && block.content) {
+        if (block.class === "Text" && block.content && !ids.has(block.id as number)) {
+          ids.add(block.id as number)
           textBlocks.push({
-            id: block.id,
+            id: block.id as number,
             title: block.title || "Untitled",
             content: block.content,
             channelSlug: channelSlug,
@@ -67,19 +69,21 @@ async function scrape_text_blocks(channelUrl: string): Promise<TextBlock[]> {
 
 
 //TODO: get rid of duplicates?
-const textBlocks: TextBlock[] = await Promise.all(channelUrls.map((channelUrl) => scrape_text_blocks(channelUrl))).then(blocks => blocks.flat());
+const textBlocks: TextBlock[] = [];
+const ids: Set<number> = new Set<number>();
+for (const channelUrl of channelUrls) {
+  const blocks = await scrape_text_blocks(channelUrl, ids);
+  textBlocks.push(...blocks);
+}
+
+const file_name = `text_blocks_${textBlocks.length}.json`;
 // Save text blocks to JSON file
 fs.writeFile(
-  'text_blocks.json',
+  file_name,
   JSON.stringify(textBlocks, null, 2),
   function (err) {
     if (err) {
       return console.error(err);
     }
-    console.log("File created!");
+    console.log(`Saved ${textBlocks.length} text blocks to ${file_name}`);
   });
-
-console.log(`Saved ${textBlocks.length} text blocks to text_blocks.json`);
-
-console.log('hello')
-// export { }; // Make this file a module
