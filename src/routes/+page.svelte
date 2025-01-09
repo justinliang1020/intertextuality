@@ -4,7 +4,10 @@
 
 <h1>intertextuality</h1>
 
-<p>A collection of experiments on showing computational relations between texts.</p>
+<p>
+	A collection of experiments on showing computational relations between texts. This project
+	primrarily uses texts from [are.na](https://www.are.na/)
+</p>
 
 <p>
 	<i>
