@@ -8,6 +8,7 @@ const channelUrls = [
   "https://www.are.na/michelle-sueann/brain-imprints",
   "https://www.are.na/lydia-beyer-0bf1yyz78li/text-t_yc04u6kt4",
   "https://www.are.na/erin-bugee/quotation-mark-underscore-quotation-mark",
+  "https://www.are.na/sav/evolving-rotr3fcho1m"
 ]
 
 function parseArenaChannelSlug(url: string): string {
