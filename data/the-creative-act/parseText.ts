@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 
 interface Chapter {
-  chapterTitle: string;
+  title: string;
   lineNumber: number;
 }
 
 interface Paragraph {
   text: string;
   id: number; // increase by 1 for each preceding paragraph
-  chapter: Chapter;
+  chapterTitle: string;
 }
 
 function findChapterLocations(
@@ -28,7 +28,7 @@ function findChapterLocations(
         lines[i + 3].trim() === '©'
       ) {
         locations.push({
-          chapterTitle: chapter,
+          title: chapter,
           lineNumber: i + 1
         });
       }
@@ -38,13 +38,13 @@ function findChapterLocations(
   return locations;
 }
 
-function getChapterFromLine(lineNumber: number, chapterLocations: Chapter[]): Chapter | null {
-  for (const chapter of chapterLocations) {
-    if (lineNumber > chapter.lineNumber) {
-      return chapter
+function getChapterFromLine(lineNumber: number, chapterLocations: Chapter[]): Chapter {
+  for (let i = 0; i < chapterLocations.length - 1; i++) {
+    if (lineNumber < chapterLocations[i + 1].lineNumber) {
+      return chapterLocations[i]
     }
   }
-  return null
+  return chapterLocations[chapterLocations.length - 1]
 }
 
 function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragraph[] {
@@ -98,15 +98,11 @@ function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragrap
       continue;
     }
     const chapter = getChapterFromLine(i, chapterLocations);
-    if (!chapter) {
-      console.error(`error in getting chapter location for line ${i}`)
-      continue
-    }
 
     const paragraph: Paragraph = {
       text,
       id,
-      chapter,
+      chapterTitle: chapter.title,
     }
     id++;
     paragraphs.push(paragraph)
