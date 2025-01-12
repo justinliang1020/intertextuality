@@ -133,7 +133,7 @@ function main() {
     console.log(`Chapter locations written to ${chapterLocationsOutputPath}. Wrote ${chapterLocations.length} chapter locations`);
 
 
-    const paragraphsOutputPath = 'paragraphs.json';
+    const paragraphsOutputPath = 'the-creative-act-quotes.json';
     fs.writeFileSync(paragraphsOutputPath, JSON.stringify(paragraphs, null, 2));
     console.log(`Paragraphs written to ${paragraphsOutputPath}. Wrote ${paragraphs.length} paragraphs`);
 
