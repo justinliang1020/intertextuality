@@ -1,13 +1,15 @@
 import * as fs from 'fs';
 
+const MIN_QUOTE_LENGTH = 50;
+
 interface Chapter {
   title: string;
   lineNumber: number;
 }
 
-interface Paragraph {
+interface Quote {
   text: string;
-  id: number; // increase by 1 for each preceding paragraph
+  id: number; // increase by 1 for each preceding quote
   chapterTitle: string;
 }
 
@@ -47,9 +49,9 @@ function getChapterFromLine(lineNumber: number, chapterLocations: Chapter[]): Ch
   return chapterLocations[chapterLocations.length - 1]
 }
 
-function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragraph[] {
-  // currently just consider a paragraph as consecutive (no whitespace inbetween) lines where the starting line starts with a capital letter and the ending line ends with a period
-  const paragraphs: Paragraph[] = []
+function findQuotes(filePath: string, chapterLocations: Chapter[]): Quote[] {
+  // currently just consider a quote as consecutive (no whitespace inbetween) lines where the starting line starts with a capital letter and the ending line ends with a period
+  const quotes: Quote[] = []
   const lines = fs.readFileSync(filePath, 'utf-8').split('\n');
 
   let id = 1
@@ -58,17 +60,19 @@ function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragrap
     if (lines[i] === '' || (lines[i][0] && lines[i][0] != lines[i][0].toUpperCase())) {
       continue;
     }
-    let isValidParagraph = false;
+    let isValidQuote = false;
     let j = i;
     while (j < lines.length - 1) {
+      // if line ends with period and the next line is empty, break and is valid paragaraph
+      // if line ends with period and the next line is not empty, continue
       // if line doesn't end with period and the next line is empty, break and is not valid pargraph
       // if line doesn't end with period and the next line is not empty, continue 
-      // if line ends with period and the next line is not empty, continue
-      // if line ends with period and the next line is empty, break and is valid paragaraph
-      const lineEndsWithPeriod = lines[j][lines[j].length - 1] === '.'
+      // last character is a newline/space i believe
+      const lineEndsWithPeriod = lines[j][lines[j].length - 2] === '.'
       const nextLineIsEmpty = lines[j + 1] === ''
       if (lineEndsWithPeriod) {
         if (nextLineIsEmpty) {
+          isValidQuote = true;
           break;
         } else {
           j++;
@@ -76,7 +80,6 @@ function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragrap
         }
       } else {
         if (nextLineIsEmpty) {
-          isValidParagraph = true;
           break;
         } else {
           j++;
@@ -84,7 +87,7 @@ function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragrap
         }
       }
     }
-    if (!isValidParagraph) {
+    if (!isValidQuote) {
       continue;
     }
 
@@ -93,21 +96,20 @@ function findParagraphs(filePath: string, chapterLocations: Chapter[]): Paragrap
       text += lines[k].trimStart().trimEnd() + " "
     }
     text = text.trimEnd()
-    if (text === '©') {
-      //TODO: why does this happen?
+    if (text.length < MIN_QUOTE_LENGTH) {
       continue;
     }
     const chapter = getChapterFromLine(i, chapterLocations);
 
-    const paragraph: Paragraph = {
+    quotes.push({
       text,
       id,
       chapterTitle: chapter.title,
-    }
+    })
     id++;
-    paragraphs.push(paragraph)
+    i = j
   }
-  return paragraphs
+  return quotes
 }
 
 
@@ -126,16 +128,16 @@ function main() {
       .filter(line => line.trim() !== '');
 
     const chapterLocations: Chapter[] = findChapterLocations(filePath, chapterTitles);
-    const paragraphs: Paragraph[] = findParagraphs(filePath, chapterLocations)
+    const quotes: Quote[] = findQuotes(filePath, chapterLocations)
 
     const chapterLocationsOutputPath = 'chapter_locations.json';
     fs.writeFileSync(chapterLocationsOutputPath, JSON.stringify(chapterLocations, null, 2));
     console.log(`Chapter locations written to ${chapterLocationsOutputPath}. Wrote ${chapterLocations.length} chapter locations`);
 
 
-    const paragraphsOutputPath = 'the-creative-act-quotes.json';
-    fs.writeFileSync(paragraphsOutputPath, JSON.stringify(paragraphs, null, 2));
-    console.log(`Paragraphs written to ${paragraphsOutputPath}. Wrote ${paragraphs.length} paragraphs`);
+    const quotesOutputPath = 'the-creative-act-quotes.json';
+    fs.writeFileSync(quotesOutputPath, JSON.stringify(quotes, null, 2));
+    console.log(`Quote written to ${quotesOutputPath}. Wrote ${quotes.length} quotes`);
 
 
   } catch (error) {
