@@ -50,9 +50,11 @@
 	<!-- 	<h1>the creative act</h1> -->
 	<!-- 	<TextBlock text={selectedQuote.text} title={selectedQuote.chapterTitle} /> -->
 	<!-- </div> -->
-	<h1>triplet</h1>
-	<p>hover over a text block reveal it's contents.</p>
-	<p>click on it to get semantically relevant text blocks.</p>
+	<div class="intro">
+		<h1>triplet</h1>
+		<p>hover over a text block reveal it's contents.</p>
+		<p>click on it to get semantically relevant text blocks.</p>
+	</div>
 	<div>
 		{#each quoteRows as quoteRow, r}
 			<div class="content">
@@ -93,6 +95,10 @@
 </main>
 
 <style>
+	.intro {
+		text-align: center;
+	}
+
 	.text-block {
 		all: unset;
 		border: 1px solid transparent;
