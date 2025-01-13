@@ -28,10 +28,16 @@
 	<li>
 		<a href="{base}/highlight">/highlight</a> - highlight words in a text and get similar quotes
 	</li>
+	<li>
+		<a href="{base}/triplet">/triplet</a> - choose a triplet of semantically related quotes
+	</li>
 </ul>
 
 <p>
 	<a href="https://github.com/justinliang1020/intertextuality">source code</a>
+</p>
+<p>
+	<a href="{base}/notes">notes</a>
 </p>
 <p>
 	by: <a href="https://www.justinliang.me/">justin</a>

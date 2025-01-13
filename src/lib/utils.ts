@@ -1,3 +1,4 @@
+import type { TextBlockWithEmbedding } from "./types";
 export function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length !== b.length) {
     throw new Error('Vectors must have same length');
@@ -14,6 +15,23 @@ export function cosineSimilarity(a: number[], b: number[]): number {
   }
 
   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+}
+
+
+export function findSimilarTextBlocks(
+  targetTextBlock: TextBlockWithEmbedding,
+  textBlocks: TextBlockWithEmbedding[],
+  n: number
+): TextBlockWithEmbedding[] {
+  // returns similar text blocks to the input textBlock not including the input text block
+  const similarities = textBlocks
+    .map((other) => ({
+      textBlock: other,
+      similarity: cosineSimilarity(targetTextBlock.embedding, other.embedding)
+    }))
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(1, n + 1);
+  return similarities.map((s) => s.textBlock);
 }
 
 // modified from https://gist.github.com/sebleier/554280
