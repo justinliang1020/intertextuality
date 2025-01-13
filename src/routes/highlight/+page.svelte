@@ -1,6 +1,6 @@
 <script lang="ts">
 	import HighlightableText from './HighlightableText.svelte';
-	import textBlocksJson from '$lib/text_blocks_with_embeddings.json';
+	import textBlocksJson from '$lib/data/text_blocks_with_embeddings_415.json';
 	import { cosineSimilarity } from '$lib/utils';
 	import type { TextBlockWithEmbedding } from '$lib/types';
 	import type { FeatureExtractionPipeline } from '@huggingface/transformers';

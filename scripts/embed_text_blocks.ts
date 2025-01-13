@@ -29,7 +29,8 @@ import * as fs from 'fs';
 import { pipeline } from '@huggingface/transformers';
 import type { TextBlock, TextBlockWithEmbedding } from '../src/lib/types.ts';
 
-const textBlocksJson = fs.readFileSync('text_blocks.json', 'utf8');
+const filePath = process.argv[2];
+const textBlocksJson = fs.readFileSync(filePath, 'utf8');
 const textBlocks: TextBlock[] = JSON.parse(textBlocksJson);
 console.log(`Loaded text_blocks.json, found ${textBlocks.length} text blocks to embed`);
 const extractor = await pipeline(
@@ -46,7 +47,7 @@ const textBlocksWithEmbeddings: TextBlockWithEmbedding[] = textBlocks.map((textB
   embedding: embeddings[index].tolist()
 }));
 
-const fileName = 'text_blocks_with_embeddings.json';
+const fileName = `text_blocks_with_embeddings_${textBlocksWithEmbeddings.length}.json`;
 fs.writeFile(
   fileName,
   JSON.stringify(textBlocksWithEmbeddings, null, 2),
