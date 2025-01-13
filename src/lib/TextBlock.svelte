@@ -17,7 +17,7 @@
 		<span class="title"><i>{title}</i></span>
 		{#if source}
 			<!-- content here -->
-			<a href={source} class="source-link" aria-label="Source link">
+			<a target="_blank" href={source} class="source-link" aria-label="Source link">
 				<svg
 					width="12"
 					height="12"
